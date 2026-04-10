@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:latest
+    container_name: arreos-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123@Admin
+      POSTGRES_DB: arreos_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - arreos_pgdata:/var/lib/postgresql/data
+
+volumes:
+  arreos_pgdata:
