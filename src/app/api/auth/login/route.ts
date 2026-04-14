@@ -5,12 +5,13 @@ import { UserRepository } from '../../../../infrastructure/repositories/UserRepo
 import { LoginUserUseCase } from '../../../../core/use-cases/auth/LoginUserUseCase';
 import { signToken } from '../../../../lib/jwt';
 import { checkRateLimit } from '../../../../lib/rate-limit';
+import { getRateLimitKey } from '../../../../lib/client-ip';
 
 export async function POST(request: Request) {
   try {
     // 0. Rate limiting por IP para prevenir fuerza bruta y credential stuffing
-    const ip = request.headers.get('x-forwarded-for') || 'unknown-ip';
-    if (!checkRateLimit(ip)) {
+    const rateLimitKey = getRateLimitKey(request);
+    if (!checkRateLimit(rateLimitKey)) {
       return NextResponse.json(
         { message: 'Demasiados intentos de inicio de sesión. Por favor, intente de nuevo más tarde.' },
         { status: 429 }
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
     // 1. Validar la entrada con Zod
     const validationResult = LoginSchema.safeParse(body);
     if (!validationResult.success) {
-      const simplifiedErrors = validationResult.error.issues.map((err: any) => ({
+      const simplifiedErrors = validationResult.error.issues.map((err) => ({
         field: err.path.join('.'),
         message: err.message
       }));

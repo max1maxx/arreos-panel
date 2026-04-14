@@ -3,12 +3,13 @@ import { RegisterSchema } from '../../../../lib/validations/auth';
 import { UserRepository } from '../../../../infrastructure/repositories/UserRepository';
 import { RegisterUserUseCase } from '../../../../core/use-cases/auth/RegisterUserUseCase';
 import { checkRateLimit } from '../../../../lib/rate-limit';
+import { getRateLimitKey } from '../../../../lib/client-ip';
 
 export async function POST(request: Request) {
   try {
     // 0. Rate limiting por IP
-    const ip = request.headers.get('x-forwarded-for') || 'unknown-ip';
-    if (!checkRateLimit(ip)) {
+    const rateLimitKey = getRateLimitKey(request);
+    if (!checkRateLimit(rateLimitKey)) {
       return NextResponse.json(
         { message: 'Demasiados intentos. Por favor, intente de nuevo más tarde.' },
         { status: 429 }
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
     // 1. Validar la entrada con Zod
     const validationResult = RegisterSchema.safeParse(body);
     if (!validationResult.success) {
-      const simplifiedErrors = validationResult.error.issues.map((err: any) => ({
+      const simplifiedErrors = validationResult.error.issues.map((err) => ({
         field: err.path.join('.'),
         message: err.message
       }));

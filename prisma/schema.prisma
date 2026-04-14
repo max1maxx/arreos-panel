@@ -22,21 +22,25 @@ enum OrderStatus {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  password_hash String
-  phone         String?
-  role          UserRole       @default(PRODUCER)
-  is_verified   Boolean        @default(false)
+  id              String         @id @default(uuid())
+  email           String         @unique
+  password_hash   String
+  first_name      String?
+  last_name       String?
+  document_type   String?        @default("CEDULA")
+  document_number String?        @unique
+  phone           String?
+  role            UserRole       @default(PRODUCER)
+  is_verified     Boolean        @default(false)
   
-  profile       Profile?
-  livestock     Livestock[]    @relation("LivestockSeller")
+  profile         Profile?
+  livestock       Livestock[]    @relation("LivestockSeller")
   
-  purchases     FreightOrder[] @relation("OrderBuyer")
-  drives        FreightOrder[] @relation("OrderDriver")
+  purchases       FreightOrder[] @relation("OrderBuyer")
+  drives          FreightOrder[] @relation("OrderDriver")
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
 }
 
 model Profile {

@@ -11,6 +11,10 @@ export interface ProfileEntity {
 export interface UserEntity {
   id: string;
   email: string;
+  first_name?: string | null;
+  last_name?: string | null;
+  document_type?: string | null;
+  document_number?: string | null;
   phone?: string | null;
   role: UserRole;
   is_verified: boolean;

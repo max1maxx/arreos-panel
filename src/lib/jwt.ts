@@ -35,7 +35,7 @@ export async function verifyToken(token: string): Promise<TokenPayload | null> {
     });
     
     return payload as unknown as TokenPayload;
-  } catch (error) {
+  } catch {
     return null;
   }
 }
