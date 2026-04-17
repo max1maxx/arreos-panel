@@ -17,8 +17,25 @@ enum UserRole {
 
 enum OrderStatus {
   PENDING
+  ACCEPTED
   IN_TRANSIT
   DELIVERED
+  CANCELLED
+}
+
+enum LivestockStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  IN_TRANSIT
+}
+
+enum TransactionStatus {
+  PENDING
+  IN_ESCROW
+  COMPLETED
+  REFUNDED
+  FAILED
 }
 
 model User {
@@ -36,8 +53,17 @@ model User {
   profile         Profile?
   livestock       Livestock[]    @relation("LivestockSeller")
   
-  purchases       FreightOrder[] @relation("OrderBuyer")
+  // Marketplace relations
+  purchases       Transaction[]  @relation("BuyerTransactions")
+  sales           Transaction[]  @relation("SellerTransactions")
+  
+  // Logistics relations
+  fights_managed  FreightOrder[] @relation("OrderBuyer")
   drives          FreightOrder[] @relation("OrderDriver")
+  
+  // Social & Reviews
+  reviews_given   Review[]       @relation("Reviewer")
+  reviews_received Review[]      @relation("Reviewee")
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
@@ -51,6 +77,8 @@ model Profile {
   finca_name       String?
   license_type     String?
   vehicle_capacity Float?
+  bio              String?
+  avatar_url       String?
   
   location         Unsupported("geometry(Point, 4326)")? 
 
@@ -65,14 +93,29 @@ model Livestock {
   sellerId      String
   seller        User                                 @relation("LivestockSeller", fields: [sellerId], references: [id], onDelete: Cascade)
   
-  species       String
+  status        LivestockStatus                      @default(AVAILABLE)
+  category      String                               // E.g., Bovino, Porcino
   breed         String?
-  weight        Float
+  weight        Float                                // Total weight or average
+  quantity      Int                                  @default(1)
   price_per_lb  Float
+  total_price   Float?
   
+  description   String?
   location      Unsupported("geometry(Point, 4326)")?
+  /// Coordenadas donde se creó la publicación (WGS84)
+  listingLatitude   Float?
+  listingLongitude  Float?
+  province          String?
+  city              String?
+
   images_url    String[]
+  guide_url     String?     // PDF or Image of the guide
+  certificate_url String?   // Health certificate
   
+  // Relationship with freight
+  freight_orders FreightOrder[]
+
   createdAt     DateTime                             @default(now())
   updatedAt     DateTime                             @updatedAt
 
@@ -82,17 +125,55 @@ model Livestock {
 model FreightOrder {
   id            String                               @id @default(uuid())
   
-  buyerId       String
+  livestockId   String
+  livestock     Livestock                            @relation(fields: [livestockId], references: [id])
+  
+  buyerId       String                               // The person requesting the freight
   buyer         User                                 @relation("OrderBuyer", fields: [buyerId], references: [id])
   
   driverId      String?
   driver        User?                                @relation("OrderDriver", fields: [driverId], references: [id])
   
   status        OrderStatus                          @default(PENDING)
+  price         Float?                               // Freight cost
   
   origin        Unsupported("geometry(Point, 4326)")
   destination   Unsupported("geometry(Point, 4326)")
+  
+  pickup_date   DateTime?
+  delivery_date DateTime?
 
   createdAt     DateTime                             @default(now())
   updatedAt     DateTime                             @updatedAt
+}
+
+model Transaction {
+  id            String            @id @default(uuid())
+  amount        Float
+  status        TransactionStatus @default(PENDING)
+  
+  buyerId       String
+  buyer         User              @relation("BuyerTransactions", fields: [buyerId], references: [id])
+  
+  sellerId      String
+  seller        User              @relation("SellerTransactions", fields: [sellerId], references: [id])
+  
+  payment_id    String?           // External payment gateway ID (Stripe, PayPal, etc.)
+  
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  rating        Int      @default(5)
+  comment       String?
+  
+  reviewerId    String
+  reviewer      User     @relation("Reviewer", fields: [reviewerId], references: [id])
+  
+  revieweeId    String
+  reviewee      User     @relation("Reviewee", fields: [revieweeId], references: [id])
+
+  createdAt     DateTime @default(now())
 }

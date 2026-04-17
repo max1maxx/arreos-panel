@@ -13,7 +13,7 @@ export default function ClientPageWrapper({ children }: { children: React.ReactN
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="flex-1 p-8"
+      className="flex-1 p-4 md:p-8"
     >
       {children}
     </motion.main>

@@ -226,18 +226,18 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
                       </td>
                       <td className="px-6 py-4">{user.phone || <span className="text-slate-400">-</span>}</td>
                       <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                           {user.id !== currentUserId ? (
                             <>
                               <button onClick={() => setEditingUser(user)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 rounded-xl transition-all">
-                                <Edit2 className="h-4 w-4" />
+                                <Edit2 className="h-4 w-4 sm:h-5 sm:w-5" />
                               </button>
                               <button onClick={() => setDeletingUser(user)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:hover:text-red-400 rounded-xl transition-all">
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
                               </button>
                             </>
                           ) : (
-                            <span className="text-xs font-medium text-slate-400 dark:text-slate-500 py-1.5">No editable</span>
+                            <span className="text-[10px] sm:text-xs font-medium text-slate-400 dark:text-slate-500 py-1.5">No editable</span>
                           )}
                         </div>
                       </td>
@@ -263,116 +263,116 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col relative z-10 max-h-[90vh]"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg overflow-hidden flex flex-col relative z-10 max-h-[90vh]"
           >
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Añadir Nuevo Usuario</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Completa los datos para dar de alta en la plataforma.</p>
+            <div className="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Añadir Nuevo Usuario</h2>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">Completa los datos para dar de alta en la plataforma.</p>
             </div>
             
-            <div className="p-6 overflow-y-auto">
-              <form id="createForm" onSubmit={createForm.handleSubmit(onSubmitCreate)} className="space-y-5">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 sm:p-6 overflow-y-auto">
+              <form id="createForm" onSubmit={createForm.handleSubmit(onSubmitCreate)} className="space-y-4 sm:space-y-5">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Nombres</label>
-                      <input {...createForm.register("first_name")} type="text" placeholder="Ej. Juan" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.first_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {createForm.formState.errors.first_name && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.first_name.message}</p>}
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Nombres</label>
+                      <input {...createForm.register("first_name")} type="text" placeholder="Ej. Juan" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.first_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {createForm.formState.errors.first_name && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.first_name.message}</p>}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Apellidos</label>
-                      <input {...createForm.register("last_name")} type="text" placeholder="Ej. Pérez" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.last_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {createForm.formState.errors.last_name && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.last_name.message}</p>}
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Apellidos</label>
+                      <input {...createForm.register("last_name")} type="text" placeholder="Ej. Pérez" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.last_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {createForm.formState.errors.last_name && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.last_name.message}</p>}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[1fr_2fr] gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Tipo de Doc.</label>
-                      <select {...createForm.register("document_type")} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Tipo de Doc.</label>
+                      <select {...createForm.register("document_type")} className="w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
                         <option value="CEDULA">Cédula</option>
                         <option value="RUC">RUC</option>
                         <option value="PASAPORTE">Pasaporte</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Número de Documento</label>
-                      <input {...createForm.register("document_number")} type="text" placeholder="Ej. 1712345678" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.document_number ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {createForm.formState.errors.document_number && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.document_number.message}</p>}
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Número de Documento</label>
+                      <input {...createForm.register("document_number")} type="text" placeholder="Ej. 1712345678" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.document_number ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {createForm.formState.errors.document_number && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.document_number.message}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Email</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Email</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Mail className="h-4 w-4 text-slate-400" />
                       </div>
-                      <input {...createForm.register("email")} type="email" placeholder="correo@ejemplo.com" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      <input {...createForm.register("email")} type="email" placeholder="correo@ejemplo.com" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                     </div>
-                    {createForm.formState.errors.email && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.email.message}</p>}
+                    {createForm.formState.errors.email && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.email.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Contraseña</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Contraseña</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Lock className="h-4 w-4 text-slate-400" />
                       </div>
-                      <input {...createForm.register("password")} type="password" placeholder="Opcional. Por defecto: arreos123" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.password ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      <input {...createForm.register("password")} type="password" placeholder="Opcional. Por defecto: arreos123" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.password ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                     </div>
-                    {createForm.formState.errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.password.message}</p>}
+                    {createForm.formState.errors.password && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.password.message}</p>}
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Rol</label>
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Rol</label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                           <Shield className="h-4 w-4 text-slate-400" />
                         </div>
-                        <select {...createForm.register("role")} className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
+                        <select {...createForm.register("role")} className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
                           {Object.values(UserRole).map(r => <option key={r} value={r}>{r}</option>)}
                         </select>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Teléfono</label>
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Teléfono</label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                           <Phone className="h-4 w-4 text-slate-400" />
                         </div>
-                        <input {...createForm.register("phone")} type="tel" placeholder="+123456789" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                        <input {...createForm.register("phone")} type="tel" placeholder="+123456789" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                       </div>
-                      {createForm.formState.errors.phone && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.phone.message}</p>}
+                      {createForm.formState.errors.phone && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.phone.message}</p>}
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-5 border-t border-slate-100 dark:border-slate-800">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2"><UserIcon className="w-4 h-4"/> Perfil Adicional (Opcional)</h3>
-                  <div className="space-y-4">
+                <div className="pt-4 sm:pt-5 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2"><UserIcon className="w-4 h-4"/> Perfil Adicional (Opcional)</h3>
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <input {...createForm.register("finca_name")} type="text" placeholder="Nombre de Finca" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.finca_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {createForm.formState.errors.finca_name && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.finca_name.message}</p>}
+                      <input {...createForm.register("finca_name")} type="text" placeholder="Nombre de Finca" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.finca_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {createForm.formState.errors.finca_name && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.finca_name.message}</p>}
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <CreditCard className="h-4 w-4 text-slate-400" />
                           </div>
-                          <input {...createForm.register("license_type")} type="text" placeholder="Licencia" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.license_type ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                          <input {...createForm.register("license_type")} type="text" placeholder="Licencia" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.license_type ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                         </div>
-                        {createForm.formState.errors.license_type && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.license_type.message}</p>}
+                        {createForm.formState.errors.license_type && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.license_type.message}</p>}
                       </div>
                       <div>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <Truck className="h-4 w-4 text-slate-400" />
                           </div>
-                          <input {...createForm.register("vehicle_capacity")} type="number" placeholder="Capacidad (lbs)" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.vehicle_capacity ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                          <input {...createForm.register("vehicle_capacity")} type="number" placeholder="Capacidad (lbs)" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${createForm.formState.errors.vehicle_capacity ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                         </div>
-                        {createForm.formState.errors.vehicle_capacity && <p className="text-red-500 text-xs mt-1 ml-1">{createForm.formState.errors.vehicle_capacity.message}</p>}
+                        {createForm.formState.errors.vehicle_capacity && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{createForm.formState.errors.vehicle_capacity.message}</p>}
                       </div>
                     </div>
                   </div>
@@ -380,10 +380,10 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
               </form>
             </div>
             
-            <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex justify-end gap-3 rounded-b-3xl">
-              <button type="button" onClick={() => setIsCreateOpen(false)} className="px-5 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Cancelar</button>
-              <button form="createForm" type="submit" disabled={isPending} className="px-5 py-2.5 text-sm font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 disabled:opacity-50 transition-all shadow-md">
-                Guardar Usuario
+            <div className="p-4 sm:p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex justify-end gap-2 sm:gap-3 rounded-b-2xl sm:rounded-b-3xl">
+              <button type="button" onClick={() => setIsCreateOpen(false)} className="px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Cancelar</button>
+              <button form="createForm" type="submit" disabled={isPending} className="px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 disabled:opacity-50 transition-all shadow-md">
+                Guardar
               </button>
             </div>
           </motion.div>
@@ -404,84 +404,84 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col relative z-10 max-h-[90vh]"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-lg overflow-hidden flex flex-col relative z-10 max-h-[90vh]"
           >
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Editar Usuario</h2>
+            <div className="p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white">Editar Usuario</h2>
             </div>
             
-            <div className="p-6 overflow-y-auto">
-              <form id="editForm" onSubmit={editForm.handleSubmit(onSubmitEdit)} className="space-y-5">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 sm:p-6 overflow-y-auto">
+              <form id="editForm" onSubmit={editForm.handleSubmit(onSubmitEdit)} className="space-y-4 sm:space-y-5">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Nombres</label>
-                      <input {...editForm.register("first_name")} type="text" placeholder="Ej. Juan" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.first_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {editForm.formState.errors.first_name && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.first_name.message}</p>}
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Nombres</label>
+                      <input {...editForm.register("first_name")} type="text" placeholder="Ej. Juan" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.first_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {editForm.formState.errors.first_name && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.first_name.message}</p>}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Apellidos</label>
-                      <input {...editForm.register("last_name")} type="text" placeholder="Ej. Pérez" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.last_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {editForm.formState.errors.last_name && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.last_name.message}</p>}
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Apellidos</label>
+                      <input {...editForm.register("last_name")} type="text" placeholder="Ej. Pérez" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.last_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {editForm.formState.errors.last_name && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.last_name.message}</p>}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[1fr_2fr] gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Tipo de Doc.</label>
-                      <select {...editForm.register("document_type")} className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Tipo de Doc.</label>
+                      <select {...editForm.register("document_type")} className="w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
                         <option value="CEDULA">Cédula</option>
                         <option value="RUC">RUC</option>
                         <option value="PASAPORTE">Pasaporte</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Número de Documento</label>
-                      <input {...editForm.register("document_number")} type="text" placeholder="Ej. 1712345678" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.document_number ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {editForm.formState.errors.document_number && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.document_number.message}</p>}
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Número de Documento</label>
+                      <input {...editForm.register("document_number")} type="text" placeholder="Ej. 1712345678" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.document_number ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {editForm.formState.errors.document_number && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.document_number.message}</p>}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Email</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Email</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Mail className="h-4 w-4 text-slate-400" />
                       </div>
-                      <input {...editForm.register("email")} type="email" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      <input {...editForm.register("email")} type="email" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                     </div>
-                    {editForm.formState.errors.email && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.email.message}</p>}
+                    {editForm.formState.errors.email && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.email.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Nueva Contraseña (Opcional)</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Nueva Contraseña (Opcional)</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Lock className="h-4 w-4 text-slate-400" />
                       </div>
-                      <input {...editForm.register("password")} type="password" placeholder="Dejar en blanco para no cambiar" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.password ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      <input {...editForm.register("password")} type="password" placeholder="Dejar en blanco para no cambiar" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.password ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                     </div>
-                    {editForm.formState.errors.password && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.password.message}</p>}
+                    {editForm.formState.errors.password && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.password.message}</p>}
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Rol</label>
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Rol</label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                           <Shield className="h-4 w-4 text-slate-400" />
                         </div>
-                        <select {...editForm.register("role")} className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
+                        <select {...editForm.register("role")} className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
                           {Object.values(UserRole).map(r => <option key={r} value={r}>{r}</option>)}
                         </select>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Verificado</label>
+                      <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Verificado</label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                           <CheckCircle2 className="h-4 w-4 text-slate-400" />
                         </div>
-                        <select {...editForm.register("is_verified")} className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
+                        <select {...editForm.register("is_verified")} className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none dark:text-white">
                           <option value="true">Sí</option>
                           <option value="false">No</option>
                         </select>
@@ -490,42 +490,42 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">Teléfono</label>
+                    <label className="block text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 sm:mb-1.5 ml-1">Teléfono</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                         <Phone className="h-4 w-4 text-slate-400" />
                       </div>
-                      <input {...editForm.register("phone")} type="tel" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      <input {...editForm.register("phone")} type="tel" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                     </div>
-                    {editForm.formState.errors.phone && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.phone.message}</p>}
+                    {editForm.formState.errors.phone && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.phone.message}</p>}
                   </div>
                 </div>
 
-                <div className="pt-5 border-t border-slate-100 dark:border-slate-800">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2"><UserIcon className="w-4 h-4"/> Perfil</h3>
-                  <div className="space-y-4">
+                <div className="pt-4 sm:pt-5 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2"><UserIcon className="w-4 h-4"/> Perfil</h3>
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <input {...editForm.register("finca_name")} type="text" placeholder="Nombre de Finca" className={`w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.finca_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
-                      {editForm.formState.errors.finca_name && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.finca_name.message}</p>}
+                      <input {...editForm.register("finca_name")} type="text" placeholder="Nombre de Finca" className={`w-full px-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.finca_name ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                      {editForm.formState.errors.finca_name && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.finca_name.message}</p>}
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <CreditCard className="h-4 w-4 text-slate-400" />
                           </div>
-                          <input {...editForm.register("license_type")} type="text" placeholder="Licencia" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.license_type ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                          <input {...editForm.register("license_type")} type="text" placeholder="Licencia" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.license_type ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                         </div>
-                        {editForm.formState.errors.license_type && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.license_type.message}</p>}
+                        {editForm.formState.errors.license_type && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.license_type.message}</p>}
                       </div>
                       <div>
                         <div className="relative">
                           <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <Truck className="h-4 w-4 text-slate-400" />
                           </div>
-                          <input {...editForm.register("vehicle_capacity")} type="number" placeholder="Capacidad (lbs)" className={`w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.vehicle_capacity ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
+                          <input {...editForm.register("vehicle_capacity")} type="number" placeholder="Capacidad (lbs)" className={`w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-950 border ${editForm.formState.errors.vehicle_capacity ? 'border-red-500' : 'border-slate-200 dark:border-slate-700'} rounded-xl text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:text-white`} />
                         </div>
-                        {editForm.formState.errors.vehicle_capacity && <p className="text-red-500 text-xs mt-1 ml-1">{editForm.formState.errors.vehicle_capacity.message}</p>}
+                        {editForm.formState.errors.vehicle_capacity && <p className="text-red-500 text-[10px] sm:text-xs mt-1 ml-1">{editForm.formState.errors.vehicle_capacity.message}</p>}
                       </div>
                     </div>
                   </div>
@@ -533,10 +533,10 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
               </form>
             </div>
             
-            <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex justify-end gap-3 rounded-b-3xl">
-              <button type="button" onClick={() => setEditingUser(null)} className="px-5 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Cancelar</button>
-              <button form="editForm" type="submit" disabled={isPending} className="px-5 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all shadow-md">
-                Actualizar Usuario
+            <div className="p-4 sm:p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex justify-end gap-2 sm:gap-3 rounded-b-2xl sm:rounded-b-3xl">
+              <button type="button" onClick={() => setEditingUser(null)} className="px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors">Cancelar</button>
+              <button form="editForm" type="submit" disabled={isPending} className="px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-all shadow-md">
+                Actualizar
               </button>
             </div>
           </motion.div>
@@ -557,23 +557,23 @@ export default function UsersClientPanel({ initialUsers, currentUserId }: { init
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden flex flex-col relative z-10"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-[95vw] sm:max-w-sm overflow-hidden flex flex-col relative z-10"
           >
-            <div className="p-8 text-center">
-              <div className="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 flex items-center justify-center mx-auto mb-5 shadow-inner">
-                <Trash2 className="h-8 w-8" />
+            <div className="p-6 sm:p-8 text-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-500 flex items-center justify-center mx-auto mb-4 sm:mb-5 shadow-inner">
+                <Trash2 className="h-6 w-6 sm:h-8 sm:w-8" />
               </div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Eliminar Usuario</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                ¿Estás seguro de que deseas eliminar permanentemente a <strong className="text-slate-700 dark:text-slate-300">{deletingUser.email}</strong>? Esta acción no se puede deshacer.
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">Eliminar Usuario</h2>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                ¿Estás seguro de que deseas eliminar a <strong className="text-slate-700 dark:text-slate-300">{deletingUser.email}</strong>? Esta acción no se puede deshacer.
               </p>
             </div>
-            <div className="p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex gap-3">
-              <button onClick={() => setDeletingUser(null)} className="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <div className="p-4 sm:p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 flex gap-2 sm:gap-3">
+              <button onClick={() => setDeletingUser(null)} className="flex-1 px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 Cancelar
               </button>
-              <button onClick={handleDelete} disabled={isPending} className="flex-1 px-4 py-2.5 text-sm font-semibold bg-red-600 text-white rounded-xl hover:bg-red-700 shadow-md transition-all disabled:opacity-50">
-                Sí, eliminar
+              <button onClick={handleDelete} disabled={isPending} className="flex-1 px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold bg-red-600 text-white rounded-xl hover:bg-red-700 shadow-md transition-all disabled:opacity-50">
+                Eliminar
               </button>
             </div>
           </motion.div>

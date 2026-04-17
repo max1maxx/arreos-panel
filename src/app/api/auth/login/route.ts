@@ -60,15 +60,20 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24, // 1 día (24 horas)
     });
 
-    // 6. Retornar los datos básicos del usuario
+    // 6. Retornar los datos básicos del usuario y el token (necesario para la App móvil)
+    console.log('Enviando datos de login para:', user.email, user.first_name, user.last_name);
+    
     return NextResponse.json(
       {
         message: 'Inicio de sesión exitoso',
+        token, // Agregado para la App
         data: {
           id: user.id,
           email: user.email,
+          first_name: user.first_name || '',
+          last_name: user.last_name || '',
           role: user.role,
-          profile: user.profile,
+          profile: user.profile || null,
         },
       },
       { status: 200 }
