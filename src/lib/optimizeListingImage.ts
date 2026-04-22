@@ -1,17 +1,17 @@
 import sharp from "sharp";
 
-/** Lado máximo en px; encaja dentro sin ampliar (mantiene proporción). */
-const MAX_EDGE = 2048;
-/** Calidad JPEG perceptualmente alta, peso mucho menor que PNG/móvil sin comprimir. */
-const JPEG_QUALITY = 86;
+/** Lado máximo en px. */
+const MAX_EDGE = 1600;
+/** Calidad equilibrada. */
+const JPEG_QUALITY = 80;
 
 /**
- * Redimensiona (si hace falta), orienta por EXIF y comprime a JPEG progresivo.
- * Pensado para fotos de publicaciones de ganado.
+ * Optimizador simplificado para máxima compatibilidad con binarios de Windows.
  */
 export async function optimizeListingPhotoBuffer(input: Buffer): Promise<Buffer> {
+  // Eliminamos mozjpeg y configuraciones avanzadas que pueden romper binarios nativos
   return sharp(input)
-    .rotate()
+    .rotate() // Respeta orientación EXIF
     .resize({
       width: MAX_EDGE,
       height: MAX_EDGE,
@@ -20,7 +20,6 @@ export async function optimizeListingPhotoBuffer(input: Buffer): Promise<Buffer>
     })
     .jpeg({
       quality: JPEG_QUALITY,
-      mozjpeg: true,
       progressive: true,
     })
     .toBuffer();
