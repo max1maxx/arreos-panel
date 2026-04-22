@@ -9,21 +9,67 @@ const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const q = searchParams.get("q");
+    const category = searchParams.get("category");
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
+    const province = searchParams.get("province");
+    const city = searchParams.get("city");
+
+    // Construcción dinámica del filtro 'where'
+    const where: any = {
+      status: "AVAILABLE",
+    };
+
+    // Búsqueda por texto (categoría o raza)
+    if (q) {
+      where.OR = [
+        { category: { contains: q, mode: 'insensitive' } },
+        { breed: { contains: q, mode: 'insensitive' } },
+        { description: { contains: q, mode: 'insensitive' } },
+      ];
+    }
+
+    // Filtro por categoría exacta
+    if (category && category !== 'Todos') {
+      where.category = category;
+    }
+
+    // Filtro por rango de precio total
+    if (minPrice || maxPrice) {
+      where.total_price = {};
+      if (minPrice) where.total_price.gte = parseFloat(minPrice);
+      if (maxPrice) where.total_price.lte = parseFloat(maxPrice);
+    }
+
+    // Filtro por ubicación (Texto)
+    if (province) {
+      where.province = { contains: province, mode: 'insensitive' };
+    }
+    if (city) {
+      where.city = { contains: city, mode: 'insensitive' };
+    }
+
     const listings = await prisma.livestock.findMany({
-      where: { status: "AVAILABLE" },
+      where,
       include: {
         seller: {
           select: {
             first_name: true,
             last_name: true,
+            email: true,
+            phone: true,
             profile: { select: { finca_name: true } }
           }
         }
       },
       orderBy: { createdAt: "desc" },
     });
+
     return NextResponse.json(listings);
   } catch (error: any) {
+    console.error("❌ ERROR GET Livestock:", error.message);
     return NextResponse.json({ error: "Error en listado" }, { status: 500 });
   }
 }

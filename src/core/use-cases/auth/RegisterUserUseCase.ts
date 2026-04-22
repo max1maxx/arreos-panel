@@ -28,6 +28,8 @@ export class RegisterUserUseCase {
     const user = await this.userRepository.createUser({
       email: input.email,
       password_hash,
+      first_name: input.first_name,
+      last_name: input.last_name,
       phone: input.phone,
       role: input.role,
       profile: profileData,

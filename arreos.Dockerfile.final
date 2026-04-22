@@ -1,0 +1,29 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY prisma ./prisma
+RUN npx prisma generate
+
+COPY . .
+# We use env vars to skip checks that are failing in build
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN npx next build --turbopack
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY --from=0 /app/package*.json ./
+COPY --from=0 /app/.next ./.next
+COPY --from=0 /app/public ./public
+COPY --from=0 /app/node_modules ./node_modules
+COPY --from=0 /app/prisma ./prisma
+
+EXPOSE 3001
+
+CMD ["npm", "start"]

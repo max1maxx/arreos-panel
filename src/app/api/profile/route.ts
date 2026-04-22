@@ -7,13 +7,18 @@ const prisma = new PrismaClient();
 
 function setCORS(res: NextResponse) {
   res.headers.set("Access-Control-Allow-Origin", "*");
-  res.headers.set("Access-Control-Allow-Methods", "GET, PATCH, OPTIONS");
+  res.headers.set("Access-Control-Allow-Methods", "GET, PUT, PATCH, OPTIONS");
   res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   return res;
 }
 
 export async function OPTIONS() {
   return setCORS(NextResponse.json({}, { status: 200 }));
+}
+
+// We expose both PUT and PATCH for compatibility
+export async function PUT(req: Request) {
+  return PATCH(req);
 }
 
 export async function PATCH(req: Request) {
