@@ -17,8 +17,8 @@ export interface TokenPayload {
 
 export async function signToken(payload: TokenPayload): Promise<string> {
   const iat = Math.floor(Date.now() / 1000);
-  // 4. JWT más corto: 1 día en lugar de 7 días para limitar la ventana de exposición.
-  const exp = iat + 60 * 60 * 24; // 1 day
+  // 4. JWT extendido: 60 días para mejorar la experiencia de usuario (UX) estilo red social.
+  const exp = iat + (60 * 60 * 24 * 60); // 60 days
 
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })

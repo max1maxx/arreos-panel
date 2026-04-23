@@ -7,6 +7,10 @@ import { optimizeListingPhotoBuffer } from "@/lib/optimizeListingImage";
 
 const prisma = new PrismaClient();
 
+// Aumentar el límite de tamaño de la petición para Next.js (App Router compatible)
+export const maxDuration = 60; // 60 segundos
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -16,13 +20,16 @@ export async function GET(req: Request) {
     const maxPrice = searchParams.get("maxPrice");
     const province = searchParams.get("province");
     const city = searchParams.get("city");
+    const sellerId = searchParams.get("sellerId");
 
-    // Construcción dinámica del filtro 'where'
     const where: any = {
       status: "AVAILABLE",
     };
 
-    // Búsqueda por texto (categoría o raza)
+    if (sellerId) {
+      where.sellerId = sellerId;
+    }
+
     if (q) {
       where.OR = [
         { category: { contains: q, mode: 'insensitive' } },
@@ -31,19 +38,16 @@ export async function GET(req: Request) {
       ];
     }
 
-    // Filtro por categoría exacta
     if (category && category !== 'Todos') {
       where.category = category;
     }
 
-    // Filtro por rango de precio total
     if (minPrice || maxPrice) {
       where.total_price = {};
       if (minPrice) where.total_price.gte = parseFloat(minPrice);
       if (maxPrice) where.total_price.lte = parseFloat(maxPrice);
     }
 
-    // Filtro por ubicación (Texto)
     if (province) {
       where.province = { contains: province, mode: 'insensitive' };
     }
@@ -147,6 +151,17 @@ export async function POST(req: Request) {
         province: formData.get("province") as string || "",
         city: formData.get("city") as string || "",
       },
+      include: {
+        seller: {
+          select: {
+            first_name: true,
+            last_name: true,
+            email: true,
+            phone: true,
+            profile: { select: { finca_name: true } }
+          }
+        }
+      }
     });
 
     return NextResponse.json({ success: true, data: newLivestock });
