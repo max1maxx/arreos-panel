@@ -15,6 +15,7 @@ export interface CreateUserData {
     finca_name?: string;
     license_type?: string;
     vehicle_capacity?: number;
+    bio?: string;
   };
 }
 
@@ -32,6 +33,7 @@ export interface UpdateUserData {
     finca_name?: string | null;
     license_type?: string | null;
     vehicle_capacity?: number | null;
+    bio?: string | null;
   };
 }
 
@@ -100,6 +102,7 @@ export class UserRepository {
             finca_name: data.profile.finca_name,
             license_type: data.profile.license_type,
             vehicle_capacity: data.profile.vehicle_capacity,
+            bio: data.profile.bio,
           }
         }
       },
@@ -129,11 +132,13 @@ export class UserRepository {
             finca_name: data.profile.finca_name,
             license_type: data.profile.license_type,
             vehicle_capacity: data.profile.vehicle_capacity,
+            bio: data.profile.bio,
           },
           update: {
             finca_name: data.profile.finca_name,
             license_type: data.profile.license_type,
             vehicle_capacity: data.profile.vehicle_capacity,
+            bio: data.profile.bio,
           }
         }
       };

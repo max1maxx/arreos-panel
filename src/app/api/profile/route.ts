@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from "@prisma/client";
 import { cookies } from 'next/headers';
 import { verifyToken } from '../../../lib/jwt';
-
-const prisma = new PrismaClient();
+import { UpdateUserUseCase } from '../../../core/use-cases/users/UpdateUserUseCase';
+import { UserRepository } from '../../../infrastructure/repositories/UserRepository';
 
 function setCORS(res: NextResponse) {
   res.headers.set("Access-Control-Allow-Origin", "*");
@@ -16,69 +15,93 @@ export async function OPTIONS() {
   return setCORS(NextResponse.json({}, { status: 200 }));
 }
 
-// We expose both PUT and PATCH for compatibility
+async function getAuthenticatedUserId(req: Request): Promise<string | null> {
+  // 1. Intentar por Header Authorization (Mobile)
+  const authHeader = req.headers.get('authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    const payload = await verifyToken(token);
+    if (payload?.id) return payload.id;
+  }
+
+  // 2. Intentar por Cookie (Web)
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth_token')?.value;
+    if (token) {
+      const payload = await verifyToken(token);
+      if (payload?.id) return payload.id;
+    }
+  } catch (e) {
+    // cookies() puede fallar en ciertos contextos de Next.js
+  }
+
+  return null;
+}
+
+export async function GET(req: Request) {
+  try {
+    const userId = await getAuthenticatedUserId(req);
+    if (!userId) {
+      return setCORS(NextResponse.json({ error: "No autorizado" }, { status: 401 }));
+    }
+
+    const repository = new UserRepository();
+    const user = await repository.findById(userId);
+
+    if (!user) {
+      return setCORS(NextResponse.json({ error: "Usuario no encontrado" }, { status: 404 }));
+    }
+
+    return setCORS(NextResponse.json({ data: user }));
+  } catch (error: any) {
+    console.error("❌ Error en GET Profile:", error);
+    return setCORS(NextResponse.json({ error: error.message }, { status: 500 }));
+  }
+}
+
 export async function PUT(req: Request) {
   return PATCH(req);
 }
 
 export async function PATCH(req: Request) {
   try {
-    // 1. Identificar al usuario (puede venir por Token en Header o Cookie)
-    const authHeader = req.headers.get('authorization');
-    let userId: string | null = null;
-
-    if (authHeader?.startsWith('Bearer ')) {
-      const token = authHeader.split(' ')[1];
-      const payload = await verifyToken(token);
-      userId = payload?.id;
-    }
-
+    const userId = await getAuthenticatedUserId(req);
     if (!userId) {
       return setCORS(NextResponse.json({ error: "No autorizado" }, { status: 401 }));
     }
 
     const body = await req.json();
+    const useCase = new UpdateUserUseCase();
 
-    // 2. Actualizar Usuario y Perfil en una sola transacción
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        first_name: body.first_name,
-        last_name: body.last_name,
-        phone: body.phone,
-        profile: {
-          upsert: {
-            create: {
-              finca_name: body.finca_name,
-              bio: body.bio,
-            },
-            update: {
-              finca_name: body.finca_name,
-              bio: body.bio,
-            }
-          }
-        }
-      },
-      include: { profile: true }
-    });
+    // Normalizar datos: Mobile envía campos de perfil en la raíz, Web los envía anidados en 'profile'
+    const updateData: any = { ...body };
+    
+    // Si vienen campos de perfil en la raíz (Mobile), los movemos a 'profile'
+    if (body.finca_name !== undefined || body.bio !== undefined || body.license_type !== undefined || body.vehicle_capacity !== undefined) {
+      updateData.profile = {
+        ...(updateData.profile || {}),
+        ...(body.finca_name !== undefined && { finca_name: body.finca_name }),
+        ...(body.bio !== undefined && { bio: body.bio }),
+        ...(body.license_type !== undefined && { license_type: body.license_type }),
+        ...(body.vehicle_capacity !== undefined && { vehicle_capacity: Number(body.vehicle_capacity) }),
+      };
+    }
+
+    const updatedUser = await useCase.execute(userId, updateData);
 
     console.log(`✅ Perfil actualizado para: ${userId}`);
 
     return setCORS(NextResponse.json({ 
       success: true, 
-      data: {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        first_name: updatedUser.first_name,
-        last_name: updatedUser.last_name,
-        phone: updatedUser.phone,
-        role: updatedUser.role,
-        profile: updatedUser.profile
-      } 
+      data: updatedUser 
     }));
 
   } catch (error: any) {
     console.error("❌ Error en PATCH Profile:", error);
-    return setCORS(NextResponse.json({ error: error.message }, { status: 500 }));
+    const status = error.message === 'Usuario no encontrado' ? 404 : 
+                   (error.message.includes('en uso') || error.message.includes('registrado')) ? 400 : 500;
+    
+    return setCORS(NextResponse.json({ error: error.message }, { status }));
   }
 }
