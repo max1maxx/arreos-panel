@@ -74,6 +74,21 @@ export async function GET(req: Request) {
   }
 }
 
+async function saveFile(file: File, folder: string, subfolder: string): Promise<string | null> {
+  if (!file || file.size === 0) return null;
+  try {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const filename = `${uuidv4()}${path.extname(file.name || '.pdf')}`;
+    const absoluteFilePath = path.join(process.cwd(), "public", folder, filename);
+    await writeFile(absoluteFilePath, buffer);
+    return `/${folder}/${filename}`;
+  } catch (e: any) {
+    console.error(`❌ Error salvando archivo ${subfolder}:`, e.message);
+    return null;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
@@ -81,45 +96,38 @@ export async function POST(req: Request) {
     if (!sellerId) return NextResponse.json({ error: "Seller ID missing" }, { status: 400 });
 
     const livestockId = uuidv4();
-    
-    // 1. Definimos la carpeta relativa (sin barra inicial)
     const relativeFolder = `uploads/users/${sellerId}/listings/${livestockId}`;
-    // 2. Ruta física absoluta para Node.js
     const absoluteFolder = path.join(process.cwd(), "public", relativeFolder);
-    
     await mkdir(absoluteFolder, { recursive: true });
 
+    // Procesar Imágenes
     const images = formData.getAll("images") as File[];
     const imageUrls: string[] = [];
-
-    console.log(`📸 Procesando ${images.length} imágenes para la carpeta: ${relativeFolder}`);
-
     for (const image of images) {
       if (image && image.size > 0) {
         try {
           const bytes = await image.arrayBuffer();
           const buffer = Buffer.from(bytes);
-          
-          // Optimizamos si es posible
           let finalBuffer = buffer;
           try {
             finalBuffer = await optimizeListingPhotoBuffer(buffer);
-          } catch (e) {
-            console.warn("Fallo optimización, usando original.");
-          }
-
+          } catch (e) {}
           const filename = `${uuidv4()}.jpg`;
-          const absoluteFilePath = path.join(absoluteFolder, filename);
-          const dbPath = `/${relativeFolder}/${filename}`; // Ruta para la DB (con barra inicial)
-          
-          await writeFile(absoluteFilePath, finalBuffer);
-          imageUrls.push(dbPath);
-          console.log(`✅ Archivo escrito en: ${absoluteFilePath}`);
-        } catch (e: any) {
-          console.error("❌ Error escribiendo archivo:", e.message);
-        }
+          await writeFile(path.join(absoluteFolder, filename), finalBuffer);
+          imageUrls.push(`/${relativeFolder}/${filename}`);
+        } catch (e: any) {}
       }
     }
+
+    // Procesar Documentos
+    const guideFile = formData.get("guide") as File;
+    const certificateFile = formData.get("certificate") as File;
+    
+    const guideUrl = await saveFile(guideFile, relativeFolder, "guide");
+    const certificateUrl = await saveFile(certificateFile, relativeFolder, "certificate");
+
+    const weight = parseFloat(formData.get("weight") as string || "0");
+    const price_per_lb = parseFloat(formData.get("price_per_lb") as string || "0");
 
     const newLivestock = await prisma.livestock.create({
       data: {
@@ -127,12 +135,14 @@ export async function POST(req: Request) {
         sellerId,
         category: formData.get("category") as string || "Bovino",
         breed: formData.get("breed") as string || "Cruza",
-        weight: parseFloat(formData.get("weight") as string || "0"),
+        weight,
         quantity: parseInt(formData.get("quantity") as string || "1"),
-        price_per_lb: parseFloat(formData.get("price_per_lb") as string || "0"),
-        total_price: (parseFloat(formData.get("weight") as string || "0") * parseFloat(formData.get("price_per_lb") as string || "0")),
+        price_per_lb,
+        total_price: weight * price_per_lb,
         description: formData.get("description") as string || "",
         images_url: imageUrls,
+        guide_url: guideUrl,
+        certificate_url: certificateUrl,
         status: "AVAILABLE",
         province: formData.get("province") as string || "",
         city: formData.get("city") as string || "",
