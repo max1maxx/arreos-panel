@@ -1,13 +1,13 @@
 import { SignJWT, jwtVerify } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-// 1. Secreto JWT sin fallback: forzamos que se configure en el entorno (especialmente en producción)
-if (!JWT_SECRET) {
-  throw new Error('FATAL ERROR: La variable de entorno JWT_SECRET no está definida.');
-}
-
-const encodedKey = new TextEncoder().encode(JWT_SECRET);
+// Movemos la validación del secreto al momento de uso para evitar que rompa el build de Next.js
+const getEncodedKey = () => {
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET) {
+    throw new Error('FATAL ERROR: La variable de entorno JWT_SECRET no está definida.');
+  }
+  return new TextEncoder().encode(JWT_SECRET);
+};
 
 export interface TokenPayload {
   id: string;
@@ -25,12 +25,12 @@ export async function signToken(payload: TokenPayload): Promise<string> {
     .setExpirationTime(exp)
     .setIssuedAt(iat)
     .setNotBefore(iat)
-    .sign(encodedKey);
+    .sign(getEncodedKey());
 }
 
 export async function verifyToken(token: string): Promise<TokenPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, encodedKey, {
+    const { payload } = await jwtVerify(token, getEncodedKey(), {
       algorithms: ['HS256'],
     });
     
