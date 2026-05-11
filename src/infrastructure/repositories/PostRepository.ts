@@ -1,5 +1,5 @@
 import { PrismaClient, Post, Comment, Interaction, Report, InteractionType, ReportStatus } from "@prisma/client";
-import prisma from "../database/prisma";
+import { prisma } from "../database/prisma";
 
 export class PostRepository {
   private prisma: PrismaClient;
